@@ -15,14 +15,6 @@ function divide(num1, num2){
     return num1 / num2;
 }
 
-function sign(num){
-    return num * -1; 
-}
-
-function percent(num){
-    return num / 100;
-}
-
 function operate(num1, operator, num2){
     if (operator == '+'){
         return add(num1,num2);
@@ -33,37 +25,40 @@ function operate(num1, operator, num2){
     else if (operator == '*'){
         return multiply(num1,num2);
     }
-    else if (operator == '/'){
+    else if (operator == '÷'){
         return divide(num1,num2);
     }
     else{
-        return "Not Valid"
+        return "Nooo!"
     }
 }
 
-
-//displayReading.innerText ='This';
-
 let calcArr=[];
-
 const operators ='+-*÷';
 let displayValue = document.getElementById("display")
 
 function dsplyNumber(button){
-    if (displayValue.textContent.length <5){
-        displayValue.innerText += button;
+    if (displayValue.textContent === ''){
+        displayValue.textContent = button;
     }
-    console.log(displayValue.textContent, typeof(displayValue))
+    else if (operators.includes(displayValue.textContent)){
+        calcArr.push(displayValue.textContent);
+        displayValue.textContent = button;
+    }
+    else if (displayValue.textContent.length <5){
+        displayValue.textContent += button;
+    }
+    console.log(displayValue.textContent, displayValue.textContent)
 }
 
 function dsplyOperator(button){
-    if (operators.includes(displayValue.innerText)){
-        displayValue.innerText = button;
+    if (operators.includes(displayValue.textContent)){
+        displayValue.textContent = button;
     }
     else if(typeof(Number(displayValue.textContent)) === 'number'){
         console.log(typeof(Number(displayValue.textContent)) === 'number')
         calcArr.push(Number(displayValue.textContent));
-        displayValue.innerText = button;
+        displayValue.textContent = button;
     }
 }
 
@@ -76,37 +71,40 @@ document.getElementById("btn5").addEventListener("click", ()=> dsplyNumber(5));
 document.getElementById("btn6").addEventListener("click", ()=> dsplyNumber(6));
 document.getElementById("btn7").addEventListener("click", ()=> dsplyNumber(7));
 document.getElementById("btn8").addEventListener("click", ()=> dsplyNumber(8));
-document.getElementById("btn9").addEventListener("click", ()=> dsplyNumber(9));
+document.getElementById("btn9").addEventListener("click", ()=> dsplyNumber(9));;
 
 document.getElementById("btnAdd").addEventListener("click", ()=> dsplyOperator('+'));
 document.getElementById("btnSub").addEventListener("click", ()=> dsplyOperator('-'));
 document.getElementById("btnMult").addEventListener("click", ()=> dsplyOperator('*'));
 document.getElementById("btnDiv").addEventListener("click", ()=> dsplyOperator('÷'));
 
+document.getElementById("btnPolarity").addEventListener("click", function(){
+    displayValue.textContent = (String(Number(displayValue.textContent) * -1))
+})
 
+document.getElementById("btnPercentage").addEventListener("click", function(){
+    displayValue.textContent = (String(Number(displayValue.textContent) * 0.01))
+})
 
+document.getElementById("btnDec").addEventListener("click", function(){
+    if (displayValue.textContent.includes('.')){
+        return
+    }
+    displayValue.textContent = (String(Number(displayValue.textContent) + '.'));
+})
 
-//extend function into other operators
-//add same logic to operator to number
-//log when push equal
+document.getElementById("btnClear").addEventListener("click", function(){
+    displayValue.textContent = '';
+    calcArr.length = [];
+})
 
 document.getElementById("btnEqual").addEventListener("click", function(){
-    displayValue = document.getElementById("display")
-    calcArr = [24, '+', 12];
-    if (calcArr[1] === '+'){
-        displayValue.innerText = add(calcArr[0], calcArr[2]);
-    } 
-    else if (calcArr[1] === '-'){
-        displayValue.innerText = subtract(calcArr[0], calcArr[2]);
-    } 
-    else if (calcArr[1] === '*'){
-        displayValue.innerText = multiply(calcArr[0], calcArr[2]);
-    } 
-    else if (calcArr[1] === '÷'){
-        displayValue.innerText = divide(calcArr[0], calcArr[2]);
-    } 
-    else{
-        displayValue.innerText = calcArr[0];
+    calcArr.push(Number(displayValue.textContent));
+    console.log(calcArr);
+    result = operate(calcArr[calcArr.length-3], 
+        calcArr[calcArr.length-2], calcArr[calcArr.length-1]);
+    if (String(result).length > 10){
+        result = result.toFixed(8);
     }
-
+    displayValue.textContent = result;
 })
